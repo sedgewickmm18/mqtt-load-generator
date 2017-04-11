@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="3.1" jmeter="3.1 r1770033">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Flink Load Test" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Global Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="username" elementType="Argument">
+            <stringProp name="Argument.name">username</stringProp>
+            <stringProp name="Argument.value">a-ts46va-jroz5ltc5k</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="password" elementType="Argument">
+            <stringProp name="Argument.name">password</stringProp>
+            <stringProp name="Argument.value">o(fFdbmp4b0AB+TGO*</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="clientPrefix" elementType="Argument">
+            <stringProp name="Argument.name">clientPrefix</stringProp>
+            <stringProp name="Argument.value">A:ts46va:</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="numberOfEvents" elementType="Argument">
+            <stringProp name="Argument.name">numberOfEvents</stringProp>
+            <stringProp name="Argument.value">1000000</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Crash Shield" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1488886958000</longProp>
+        <longProp name="ThreadGroup.end_time">1488886958000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Crash Event" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${numberOfEvents}</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="user counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end">${numberOfEvents}</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">userCounter</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <net.xmeter.samplers.PubSampler guiclass="net.xmeter.gui.PubSamplerUI" testclass="net.xmeter.samplers.PubSampler" testname="Publish Event" enabled="true">
+            <stringProp name="mqtt.keystore_file_path"></stringProp>
+            <stringProp name="mqtt.clientcert_file_path"></stringProp>
+            <stringProp name="mqtt.conn_keep_alive">300</stringProp>
+            <stringProp name="mqtt.conn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.keep_time">1800</stringProp>
+            <stringProp name="mqtt.client_id_prefix">${clientPrefix}</stringProp>
+            <stringProp name="mqtt.reconn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.conn_timeout">10</stringProp>
+            <boolProp name="mqtt.dual_ssl_authentication">false</boolProp>
+            <stringProp name="mqtt.keystore_password"></stringProp>
+            <stringProp name="mqtt.clientcert_password"></stringProp>
+            <stringProp name="mqtt.port">8883</stringProp>
+            <stringProp name="mqtt.protocol">SSL</stringProp>
+            <stringProp name="mqtt.server">r6sunr.messaging.internetofthings.ibmcloud.com</stringProp>
+            <stringProp name="mqtt.user_name">${username}</stringProp>
+            <stringProp name="mqtt.password">${password}</stringProp>
+            <stringProp name="mqtt.topic_name">iot-2/type/ecall/id/crash/evt/status/fmt/json</stringProp>
+            <stringProp name="mqtt.qos_level">0</stringProp>
+            <boolProp name="mqtt.add_timestamp">false</boolProp>
+            <stringProp name="mqtt.message_type">String</stringProp>
+            <stringProp name="mqtt.message_type_fixed_length">1024</stringProp>
+            <stringProp name="mqtt.message_to_sent">{&quot;crashStatus&quot;: 2 , &quot;crashIndex&quot;: 20,&quot;deviceId&quot;:&quot;device${userCounter}&quot;,&quot;eventId&quot;:&quot;event${userCounter}&quot;, &quot;username&quot;: &quot;user${userCounter}&quot; , &quot;timestamp&quot;:&quot;${__time}&quot; }</stringProp>
+          </net.xmeter.samplers.PubSampler>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Eldery Care" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1488900456000</longProp>
+        <longProp name="ThreadGroup.end_time">1488900456000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Door Open" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="user counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end">${numberOfEvents}</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">userCounter</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <net.xmeter.samplers.PubSampler guiclass="net.xmeter.gui.PubSamplerUI" testclass="net.xmeter.samplers.PubSampler" testname="Publish Event" enabled="true">
+            <stringProp name="mqtt.keystore_file_path"></stringProp>
+            <stringProp name="mqtt.clientcert_file_path"></stringProp>
+            <stringProp name="mqtt.conn_keep_alive">300</stringProp>
+            <stringProp name="mqtt.conn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.keep_time">1800</stringProp>
+            <stringProp name="mqtt.client_id_prefix">${clientPrefix}</stringProp>
+            <stringProp name="mqtt.reconn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.conn_timeout">10</stringProp>
+            <boolProp name="mqtt.dual_ssl_authentication">false</boolProp>
+            <stringProp name="mqtt.keystore_password"></stringProp>
+            <stringProp name="mqtt.clientcert_password"></stringProp>
+            <stringProp name="mqtt.port">1883</stringProp>
+            <stringProp name="mqtt.protocol">TCP</stringProp>
+            <stringProp name="mqtt.server">127.0.0.1</stringProp>
+            <stringProp name="mqtt.user_name">${username}</stringProp>
+            <stringProp name="mqtt.password">${password}</stringProp>
+            <stringProp name="mqtt.topic_name">iot-2/type/enocean/id/contact/evt/status/fmt/json</stringProp>
+            <stringProp name="mqtt.qos_level">2</stringProp>
+            <boolProp name="mqtt.add_timestamp">false</boolProp>
+            <stringProp name="mqtt.message_type">String</stringProp>
+            <stringProp name="mqtt.message_type_fixed_length">1024</stringProp>
+            <stringProp name="mqtt.message_to_sent">{ &quot;d&quot;: {&quot;states&quot;: { &quot;contact&quot;: {&quot;value&quot;: &quot;closed&quot;}}}, &quot;username&quot;: &quot;flink-test-user-${userCounter}&quot; , &quot;timestamp&quot;:&quot;${__time}&quot; }</stringProp>
+          </net.xmeter.samplers.PubSampler>
+          <hashTree/>
+        </hashTree>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Delay 1 Sec" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">1000</stringProp>
+        </TestAction>
+        <hashTree/>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="No Motion" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="user counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end">${numberOfEvents}</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">userCounter</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <net.xmeter.samplers.PubSampler guiclass="net.xmeter.gui.PubSamplerUI" testclass="net.xmeter.samplers.PubSampler" testname="Publish Event" enabled="true">
+            <stringProp name="mqtt.keystore_file_path"></stringProp>
+            <stringProp name="mqtt.clientcert_file_path"></stringProp>
+            <stringProp name="mqtt.conn_keep_alive">300</stringProp>
+            <stringProp name="mqtt.conn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.keep_time">1800</stringProp>
+            <stringProp name="mqtt.client_id_prefix">${clientPrefix}</stringProp>
+            <stringProp name="mqtt.reconn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.conn_timeout">10</stringProp>
+            <boolProp name="mqtt.dual_ssl_authentication">false</boolProp>
+            <stringProp name="mqtt.keystore_password"></stringProp>
+            <stringProp name="mqtt.clientcert_password"></stringProp>
+            <stringProp name="mqtt.port">1883</stringProp>
+            <stringProp name="mqtt.protocol">TCP</stringProp>
+            <stringProp name="mqtt.server">127.0.0.1</stringProp>
+            <stringProp name="mqtt.user_name">${username}</stringProp>
+            <stringProp name="mqtt.password">${password}</stringProp>
+            <stringProp name="mqtt.topic_name">iot-2/type/enocean/id/motion/evt/status/fmt/json</stringProp>
+            <stringProp name="mqtt.qos_level">2</stringProp>
+            <boolProp name="mqtt.add_timestamp">false</boolProp>
+            <stringProp name="mqtt.message_type">String</stringProp>
+            <stringProp name="mqtt.message_type_fixed_length">1024</stringProp>
+            <stringProp name="mqtt.message_to_sent">{ &quot;d&quot;: {&quot;states&quot;: { &quot;motion&quot;: {&quot;value&quot;: false}}}, &quot;username&quot;: &quot;flink-test-user-${userCounter}&quot; , &quot;timestamp&quot;:&quot;${__time}&quot; }</stringProp>
+          </net.xmeter.samplers.PubSampler>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Lost in the storm" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1488906043000</longProp>
+        <longProp name="ThreadGroup.end_time">1488906043000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Door Open" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${numberOfEvents}</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="user counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end">${numberOfEvents}</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">userCounter</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <net.xmeter.samplers.PubSampler guiclass="net.xmeter.gui.PubSamplerUI" testclass="net.xmeter.samplers.PubSampler" testname="Publish Event" enabled="true">
+            <stringProp name="mqtt.keystore_file_path"></stringProp>
+            <stringProp name="mqtt.clientcert_file_path"></stringProp>
+            <stringProp name="mqtt.conn_keep_alive">300</stringProp>
+            <stringProp name="mqtt.conn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.keep_time">1800</stringProp>
+            <stringProp name="mqtt.client_id_prefix">${clientPrefix}</stringProp>
+            <stringProp name="mqtt.reconn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.conn_timeout">10</stringProp>
+            <boolProp name="mqtt.dual_ssl_authentication">false</boolProp>
+            <stringProp name="mqtt.keystore_password"></stringProp>
+            <stringProp name="mqtt.clientcert_password"></stringProp>
+            <stringProp name="mqtt.port">8883</stringProp>
+            <stringProp name="mqtt.protocol">SSL</stringProp>
+            <stringProp name="mqtt.server">ts46va.messaging.internetofthings.ibmcloud.com</stringProp>
+            <stringProp name="mqtt.user_name">${username}</stringProp>
+            <stringProp name="mqtt.password">${password}</stringProp>
+            <stringProp name="mqtt.topic_name">iot-2/type/enocean/id/contact/evt/status/fmt/json</stringProp>
+            <stringProp name="mqtt.qos_level">0</stringProp>
+            <boolProp name="mqtt.add_timestamp">false</boolProp>
+            <stringProp name="mqtt.message_type">String</stringProp>
+            <stringProp name="mqtt.message_type_fixed_length">1024</stringProp>
+            <stringProp name="mqtt.message_to_sent">{ &quot;d&quot;: {&quot;states&quot;: { &quot;contact&quot;: {&quot;value&quot;: &quot;closed&quot;}}}, &quot;username&quot;: &quot;flink-test-user-${userCounter}&quot; , &quot;timestamp&quot;: ${__time} }</stringProp>
+          </net.xmeter.samplers.PubSampler>
+          <hashTree/>
+        </hashTree>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Delay 1 Sec" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">1000</stringProp>
+        </TestAction>
+        <hashTree/>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="No Motion" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${numberOfEvents}</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="user counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end">${numberOfEvents}</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">userCounter</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <net.xmeter.samplers.PubSampler guiclass="net.xmeter.gui.PubSamplerUI" testclass="net.xmeter.samplers.PubSampler" testname="Publish Event" enabled="true">
+            <stringProp name="mqtt.keystore_file_path"></stringProp>
+            <stringProp name="mqtt.clientcert_file_path"></stringProp>
+            <stringProp name="mqtt.conn_keep_alive">300</stringProp>
+            <stringProp name="mqtt.conn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.keep_time">1800</stringProp>
+            <stringProp name="mqtt.client_id_prefix">${clientPrefix}</stringProp>
+            <stringProp name="mqtt.reconn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.conn_timeout">10</stringProp>
+            <boolProp name="mqtt.dual_ssl_authentication">false</boolProp>
+            <stringProp name="mqtt.keystore_password"></stringProp>
+            <stringProp name="mqtt.clientcert_password"></stringProp>
+            <stringProp name="mqtt.port">8883</stringProp>
+            <stringProp name="mqtt.protocol">SSL</stringProp>
+            <stringProp name="mqtt.server">ts46va.messaging.internetofthings.ibmcloud.com</stringProp>
+            <stringProp name="mqtt.user_name">${username}</stringProp>
+            <stringProp name="mqtt.password">${password}</stringProp>
+            <stringProp name="mqtt.topic_name">iot-2/type/enocean/id/motion/evt/status/fmt/json</stringProp>
+            <stringProp name="mqtt.qos_level">0</stringProp>
+            <boolProp name="mqtt.add_timestamp">false</boolProp>
+            <stringProp name="mqtt.message_type">String</stringProp>
+            <stringProp name="mqtt.message_type_fixed_length">1024</stringProp>
+            <stringProp name="mqtt.message_to_sent">{ &quot;d&quot;: {&quot;states&quot;: { &quot;motion&quot;: {&quot;value&quot;: false}}}, &quot;username&quot;: &quot;flink-test-user-${userCounter}&quot; , &quot;timestamp&quot;: ${__time} }</stringProp>
+          </net.xmeter.samplers.PubSampler>
+          <hashTree/>
+        </hashTree>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Delay 5 Sec" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">5000</stringProp>
+        </TestAction>
+        <hashTree/>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Bad Weather" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${numberOfEvents}</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="user counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end">${numberOfEvents}</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">userCounter</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <net.xmeter.samplers.PubSampler guiclass="net.xmeter.gui.PubSamplerUI" testclass="net.xmeter.samplers.PubSampler" testname="Publish Event" enabled="true">
+            <stringProp name="mqtt.keystore_file_path"></stringProp>
+            <stringProp name="mqtt.clientcert_file_path"></stringProp>
+            <stringProp name="mqtt.conn_keep_alive">300</stringProp>
+            <stringProp name="mqtt.conn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.keep_time">1800</stringProp>
+            <stringProp name="mqtt.client_id_prefix">${clientPrefix}</stringProp>
+            <stringProp name="mqtt.reconn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.conn_timeout">10</stringProp>
+            <boolProp name="mqtt.dual_ssl_authentication">false</boolProp>
+            <stringProp name="mqtt.keystore_password"></stringProp>
+            <stringProp name="mqtt.clientcert_password"></stringProp>
+            <stringProp name="mqtt.port">8883</stringProp>
+            <stringProp name="mqtt.protocol">SSL</stringProp>
+            <stringProp name="mqtt.server">ts46va.messaging.internetofthings.ibmcloud.com</stringProp>
+            <stringProp name="mqtt.user_name">${username}</stringProp>
+            <stringProp name="mqtt.password">${password}</stringProp>
+            <stringProp name="mqtt.topic_name">iot-2/type/enocean/id/weather/evt/status/fmt/json</stringProp>
+            <stringProp name="mqtt.qos_level">0</stringProp>
+            <boolProp name="mqtt.add_timestamp">false</boolProp>
+            <stringProp name="mqtt.message_type">String</stringProp>
+            <stringProp name="mqtt.message_type_fixed_length">1024</stringProp>
+            <stringProp name="mqtt.message_to_sent">{&quot;d&quot;: {&quot;states&quot;: {&quot;weather&quot;: {&quot;value&quot;: 35}}} , &quot;username&quot;: &quot;flink-test-user-${userCounter}&quot; ,&quot;deviceId&quot;:&quot;weatherDevice${userCounter}&quot;,&quot;eventId&quot;:&quot;weatherEvent${userCounter}&quot;,&quot;timestamp&quot;: ${__time}}</stringProp>
+          </net.xmeter.samplers.PubSampler>
+          <hashTree/>
+        </hashTree>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Delay 1 Sec" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">1000</stringProp>
+        </TestAction>
+        <hashTree/>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="No Door Open" enabled="false">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${numberOfEvents}</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="user counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end">${numberOfEvents}</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">userCounter</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <net.xmeter.samplers.PubSampler guiclass="net.xmeter.gui.PubSamplerUI" testclass="net.xmeter.samplers.PubSampler" testname="Publish Event" enabled="true">
+            <stringProp name="mqtt.keystore_file_path"></stringProp>
+            <stringProp name="mqtt.clientcert_file_path"></stringProp>
+            <stringProp name="mqtt.conn_keep_alive">300</stringProp>
+            <stringProp name="mqtt.conn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.keep_time">1800</stringProp>
+            <stringProp name="mqtt.client_id_prefix">${clientPrefix}</stringProp>
+            <stringProp name="mqtt.reconn_attampt_max">0</stringProp>
+            <stringProp name="mqtt.conn_timeout">10</stringProp>
+            <boolProp name="mqtt.dual_ssl_authentication">false</boolProp>
+            <stringProp name="mqtt.keystore_password"></stringProp>
+            <stringProp name="mqtt.clientcert_password"></stringProp>
+            <stringProp name="mqtt.port">8883</stringProp>
+            <stringProp name="mqtt.protocol">SSL</stringProp>
+            <stringProp name="mqtt.server">ts46va.messaging.internetofthings.ibmcloud.com</stringProp>
+            <stringProp name="mqtt.user_name">${username}</stringProp>
+            <stringProp name="mqtt.password">${password}</stringProp>
+            <stringProp name="mqtt.topic_name">iot-2/type/enocean/id/contact/evt/status/fmt/json</stringProp>
+            <stringProp name="mqtt.qos_level">0</stringProp>
+            <boolProp name="mqtt.add_timestamp">false</boolProp>
+            <stringProp name="mqtt.message_type">String</stringProp>
+            <stringProp name="mqtt.message_type_fixed_length">1024</stringProp>
+            <stringProp name="mqtt.message_to_sent">{&quot;d&quot;:{&quot;states&quot;:{&quot;contact&quot;:{&quot;value&quot;: false}}} , &quot;username&quot;: &quot;flink-test-user-${userCounter}&quot;,&quot;deviceId&quot;:&quot;contactDevice${userCounter}&quot;,&quot;eventId&quot;:&quot;noDoorOpenEvent${userCounter}&quot;,&quot;timestamp&quot;:&quot;${__time}&quot;}</stringProp>
+          </net.xmeter.samplers.PubSampler>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
